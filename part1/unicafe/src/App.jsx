@@ -1,33 +1,50 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
 
-function App() {
-  const [count, setCount] = useState(0)
+const Button = (props) => (
+  <button onClick={props.handleClick}>
+    {props.text}
+  </button>
+)
+
+const Display = props => <div>{props.value}</div>
+const Statistics = ({good, neutral, bad}) => (
+  <>
+    <div>Good: {good}</div>
+    <div>Neutral: {neutral}</div>
+    <div>Bad: {bad}</div>
+  </>
+);
+
+const App = () => {
+  // save clicks of each button to its own state
+  const [good, setGood] = useState(0)
+  const [neutral, setNeutral] = useState(0)
+  const [bad, setBad] = useState(0)
+  
+  const handleButton = (props) => {
+    console.log(props)
+    if (props === 'good') {
+      setGood(good + 1)
+    }
+    if (props === 'bad') {
+      setBad(bad + 1)
+    }
+    if (props === 'neutral') {
+      setNeutral(neutral + 1)
+    }
+  }
+
 
   return (
     <>
+      <h1>Give Feedback</h1>
       <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+        <Button handleClick={() => handleButton('good')} text="Good" />
+        <Button handleClick={() => handleButton('neutral')} text="Neutral" />
+        <Button handleClick={() => handleButton('bad')} text="Bad" />
+        <h1>Statistics</h1>
+        <Statistics good={good} neutral={neutral} bad={bad} />
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
     </>
   )
 }
