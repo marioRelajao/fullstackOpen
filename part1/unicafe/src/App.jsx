@@ -6,14 +6,25 @@ const Button = (props) => (
   </button>
 )
 
-const Display = props => <div>{props.value}</div>
-const Statistics = ({good, neutral, bad}) => (
+const Statistics = ({good, neutral, bad}) =>{ 
+  var average = (good - bad) / (good + neutral + bad)
+  if (average === Infinity || isNaN(average)) {
+    average = 0
+  }
+  var positive = (good / (good + neutral + bad)) * 100
+  if (isNaN(positive)) {
+    positive = 0
+  }
+  return(
   <>
     <div>Good: {good}</div>
     <div>Neutral: {neutral}</div>
     <div>Bad: {bad}</div>
+    <div>All: {good + neutral + bad}</div>
+    <div>Average: {average}</div>
+    <div>Positive: {positive} %</div>
   </>
-);
+)}
 
 const App = () => {
   // save clicks of each button to its own state
