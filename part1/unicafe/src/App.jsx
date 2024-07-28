@@ -15,6 +15,13 @@ const Statistics = ({good, neutral, bad}) =>{
   if (isNaN(positive)) {
     positive = 0
   }
+  if (good === 0 && neutral === 0 && bad === 0) {
+    return(
+      <>
+        <div>No feedback given</div>
+      </>
+    )
+  }
   return(
   <>
     <div>Good: {good}</div>
