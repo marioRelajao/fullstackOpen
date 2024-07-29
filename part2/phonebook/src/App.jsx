@@ -2,24 +2,20 @@ import { useState, useEffect } from 'react'
 import Persons from './components/Persons'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
-import axios from 'axios'
+import numberService from './services/numbers'
 
 const App = () => {
   const [persons, setPersons] = useState([])
-  
-  useEffect(() => {
-    console.log('effect')
-    axios
-      .get('http://localhost:3001/persons')
-      .then(response => {
-        console.log('promise fulfilled')
-        setPersons(response.data)
-      })
-  }, [])
-
   const [newNumber, setNewNumber] = useState('')
   const [newName, setNewName] = useState('')
   const [search, setSearch] = useState('')
+
+  useEffect(() => {
+    numberService.getAll()
+      .then(initialNumbers => {
+        setPersons(initialNumbers)
+      })
+  }, [])
 
   const addPerson = (event) => {
     event.preventDefault()
@@ -31,10 +27,21 @@ const App = () => {
       alert(`${newName} is already added to phonebook`)
       return
     }
-    setPersons(persons.concat(newPerson))
+    numberService.create(newPerson)
+      .then(returnedPerson => {
+        setPersons(persons.concat(returnedPerson))
+        setNewNumber('')
+        setNewName('')
+      })    
+
     setNewName('')
   }
-  
+
+  const deletePerson = (id) => {
+    numberService.remove(id).then(() => {
+      setPersons(persons.filter(person => person.id !== id))
+    })
+  }
   const handleNameChange = (event) => {
     setNewName(event.target.value)
   }
@@ -62,7 +69,7 @@ const App = () => {
         number={{value: newNumber, onChange: handleNumberChange}}
       />
       <h2>Numbers</h2>
-      <Persons persons={personsToShow} />
+      <Persons persons={personsToShow} handleButton={deletePerson} />
     </div>
   )
 }
